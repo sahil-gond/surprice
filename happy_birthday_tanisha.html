@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Happy Birthday Sona ❤️</title>
+<style>
+  :root{
+    --midnight:#1b0f21;
+    --midnight-deep:#120a16;
+    --plum:#3a1f3d;
+    --rose:#e8899f;
+    --rose-soft:#f3b8c4;
+    --blush:#ffe3e9;
+    --gold:#d8b26a;
+    --ink:#f6ece9;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    padding:0;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(216,178,106,0.10), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(232,137,159,0.12), transparent 45%),
+      linear-gradient(180deg, var(--midnight-deep), var(--midnight) 40%, var(--plum));
+    font-family:'Cormorant Garamond', 'Georgia', serif;
+    color:var(--ink);
+    overflow-x:hidden;
+    text-align:center;
+    position:relative;
+  }
+
+  /* subtle canvas for a starfield feel behind everything */
+  #stars{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    opacity:0.6;
+  }
+
+  .eyebrow{
+    font-family:'Poppins', sans-serif;
+    letter-spacing:0.35em;
+    text-transform:uppercase;
+    font-size:12px;
+    color:var(--gold);
+    opacity:0.85;
+  }
+
+  section{
+    padding:90px 20px;
+    max-width:900px;
+    margin:0 auto;
+  }
+
+  h1{
+    font-family:'Playfair Display', 'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:clamp(38px, 6vw, 64px);
+    margin:18px 0 6px;
+    background:linear-gradient(120deg, var(--blush), var(--rose-soft), var(--gold));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    letter-spacing:0.01em;
+  }
+
+  h2.name{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:clamp(24px, 4vw, 34px);
+    color:var(--rose-soft);
+    margin:0 0 10px;
+  }
+
+  .signature-line{
+    font-family:'Poppins', sans-serif;
+    font-size:14px;
+    letter-spacing:0.08em;
+    color:rgba(246,236,233,0.65);
+    margin-bottom:46px;
+  }
+
+  /* ---------- Envelope hero ---------- */
+  .hero{
+    padding-top:70px;
+  }
+
+  .envelope-wrap{
+    margin:40px auto 10px;
+    width:min(320px, 80vw);
+    perspective:1200px;
+  }
+
+  .envelope{
+    position:relative;
+    width:100%;
+    aspect-ratio:3/2;
+    cursor:pointer;
+  }
+
+  .envelope-body{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(160deg, #4a2b4d, #2b1730);
+    border-radius:10px;
+    box-shadow:0 25px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(216,178,106,0.25);
+  }
+
+  .envelope-flap{
+    position:absolute;
+    top:0; left:0; right:0;
+    height:55%;
+    background:linear-gradient(160deg, #5c3660, #3a1f3d);
+    clip-path:polygon(0 0, 100% 0, 50% 85%);
+    transform-origin:top;
+    transition:transform 0.9s cubic-bezier(.6,-0.2,.3,1.3);
+    border-radius:10px 10px 0 0;
+    z-index:3;
+  }
+
+  .wax-seal{
+    position:absolute;
+    top:38%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #e8899f, #9c3a53 70%);
+    box-shadow:0 6px 14px rgba(0,0,0,0.4);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    z-index:4;
+    transition:opacity 0.4s ease;
+  }
+
+  .envelope.open .envelope-flap{
+    transform:rotateX(180deg);
+  }
+
+  .envelope.open .wax-seal{
+    opacity:0;
+  }
+
+  .envelope-hint{
+    font-family:'Poppins', sans-serif;
+    font-size:13px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:rgba(246,236,233,0.55);
+    margin-top:22px;
+  }
+
+  /* ---------- Letter ---------- */
+  #message{
+    max-height:0;
+    opacity:0;
+    overflow:hidden;
+    transition:max-height 1s ease, opacity 1.2s ease, margin 1s ease;
+    margin-top:0;
+  }
+
+  #message.visible{
+    max-height:1400px;
+    opacity:1;
+    margin-top:40px;
+  }
+
+  .letter-card{
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(216,178,106,0.25);
+    border-radius:18px;
+    padding:44px 36px;
+    backdrop-filter:blur(14px);
+    box-shadow:0 20px 50px -20px rgba(0,0,0,0.5);
+    text-align:left;
+  }
+
+  .letter-card h3{
+    font-family:'Poppins', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.2em;
+    font-size:13px;
+    color:var(--gold);
+    text-align:center;
+    margin-bottom:26px;
+  }
+
+  .letter-card p{
+    font-size:21px;
+    line-height:1.9;
+    color:var(--ink);
+  }
+
+  .letter-signoff{
+    text-align:right;
+    font-style:italic;
+    color:var(--rose-soft);
+    margin-top:20px;
+  }
+
+  /* ---------- Gallery ---------- */
+ .gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:22px;
+  margin-top:44px;
+}
+
+.polaroid{
+  background:#fdf8f4;
+  padding:12px 12px 26px;
+  border-radius:6px;
+  box-shadow:0 15px 35px -12px rgba(0,0,0,0.55);
+  transform:rotate(var(--tilt, -2deg));
+  transition:transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+  .polaroid:nth-child(even){ --tilt:2deg; }
+  .polaroid:nth-child(3n){ --tilt:-3deg; }
+  .polaroid:nth-child(4n){ --tilt:1deg; }
+
+  .polaroid:hover{
+    transform:rotate(0deg) scale(1.05) translateY(-6px);
+    box-shadow:0 25px 45px -15px rgba(0,0,0,0.65);
+  }
+
+.polaroid img{
+  width:100%;
+  height:auto;         /* natural size — no cropping, keeps each photo's own ratio */
+  display:block;
+  border-radius:2px;
+  background:#e9dcd8;
+}
+
+  /* ---------- Counter ---------- */
+  .counter-card{
+    display:inline-flex;
+    gap:26px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-top:34px;
+    padding:30px 40px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(216,178,106,0.25);
+    border-radius:18px;
+  }
+
+  .counter-unit{
+    min-width:80px;
+  }
+
+  .counter-unit .num{
+    font-family:'Playfair Display', serif;
+    font-size:38px;
+    color:var(--rose-soft);
+    display:block;
+  }
+
+  .counter-unit .label{
+    font-family:'Poppins', sans-serif;
+    font-size:11px;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    color:rgba(246,236,233,0.6);
+  }
+
+  /* ---------- Reasons ---------- */
+  .reasons{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:14px;
+    margin-top:40px;
+  }
+
+  .reason-tag{
+    font-family:'Poppins', sans-serif;
+    font-size:14px;
+    letter-spacing:0.02em;
+    padding:12px 22px;
+    border-radius:999px;
+    border:1px solid rgba(216,178,106,0.35);
+    background:rgba(255,255,255,0.04);
+    color:var(--blush);
+  }
+
+  /* ---------- Footer ---------- */
+  footer{
+    padding:80px 24px 100px;
+  }
+
+  footer .quote{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-size:clamp(20px,3vw,28px);
+    max-width:560px;
+    margin:20px auto;
+    color:var(--rose-soft);
+    line-height:1.6;
+  }
+
+  footer .final-line{
+    font-family:'Poppins', sans-serif;
+    letter-spacing:0.06em;
+    font-size:16px;
+    margin-top:26px;
+    color:var(--gold);
+  }
+
+  /* ---------- Floating hearts (toned down) ---------- */
+  .heart{
+    position:fixed;
+    bottom:-40px;
+    color:rgba(232,137,159,0.55);
+    font-size:16px;
+    pointer-events:none;
+    animation:float 9s linear forwards;
+    z-index:0;
+  }
+
+  @keyframes float{
+    0%{ transform:translateY(0) translateX(0) rotate(0deg); opacity:0; }
+    10%{ opacity:1; }
+    100%{ transform:translateY(-110vh) translateX(var(--drift,0px)) rotate(180deg); opacity:0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .polaroid img{ height:160px; }
+    .heart{ animation:none; display:none; }
+    .envelope-flap{ transition:none; }
+    #message{ transition:none; }
+  }
+
+  a:focus-visible, button:focus-visible, .envelope:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:3px;
+  }
+</style>
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+<section class="hero">
+  <p class="eyebrow">A little something for you</p>
+  <h1>Happy Birthday, My Sona</h1>
+  <h2 class="name">Tanisha ❤️</h2>
+  <p class="signature-line">Made with infinite love by Sahil (your bor)</p>
+
+  <div class="envelope-wrap">
+    <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open your birthday letter">
+      <div class="envelope-body"></div>
+      <div class="envelope-flap"></div>
+      <div class="wax-seal">❤</div>
+    </div>
+  </div>
+  <p class="envelope-hint">Tap the envelope to open your surprise</p>
+
+  <div id="message">
+    <div class="letter-card">
+      <h3>My Love Letter</h3>
+      <p>
+        Dear Tanisha,<br><br>
+        Happy birthday to the most beautiful girl in my life.
+        Every day with you feels like a blessing.
+        Thank you for coming into my life and making it brighter.
+        <br><br>
+        Your smile gives me peace. Your voice gives me happiness. Your love gives me strength.
+        <br><br>
+        I promise to always support you, respect you, care for you, and love you with all my heart.
+        No matter what happens, I will always choose you — again, again, and again.
+        <br><br>
+        Happy Birthday, my Sona ❤️
+      </p>
+      <p class="letter-signoff">Forever yours, Sahil ❤️</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">Memories</p>
+  <h2 class="name" style="font-size:28px;">Our Beautiful Moments</h2>
+  <div class="gallery">
+    <div class="polaroid"><img src="1 (1).jpeg" alt="Memory 1"></div>
+    <div class="polaroid"><img src="1 (4).jpeg" alt="Memory 2"></div>
+    <div class="polaroid"><img src="1 (8).jpeg" alt="Memory 3"></div>
+    <div class="polaroid"><img src="1 (15).jpeg" alt="Memory 4"></div>
+    <div class="polaroid"><img src="2 (3).jpeg" alt="Memory 5"></div>
+    <div class="polaroid"><img src="2 (5).jpeg" alt="Memory 6"></div>
+    <div class="polaroid"><img src="2 (7).jpeg" alt="Memory 7"></div>
+    <div class="polaroid"><img src="2 (4).jpeg" alt="Memory 8"></div>
+    <div class="polaroid"><img src="2 (10).jpeg" alt="Memory 9"></div>
+    <div class="polaroid"><img src="2 (9).jpeg" alt="Memory 10"></div>
+    <div class="polaroid"><img src="2 (2).jpeg" alt="Memory 11"></div>
+    <div class="polaroid"><img src="2 (6).jpeg" alt="Memory 12"></div>
+    <div class="polaroid"><img src="2 (8).jpeg" alt="Memory 13"></div>
+    <div class="polaroid"><img src="2 (11).jpeg" alt="Memory 14"></div>
+    <div class="polaroid"><img src="1 (3).jpeg" alt="Memory 15"></div>
+    <div class="polaroid"><img src="1 (6).jpeg" alt="Memory 16"></div>
+
+
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">Together Since</p>
+  <h2 class="name" style="font-size:28px;">Every Second Counts</h2>
+  <div class="counter-card" id="counter">
+    <div class="counter-unit"><span class="num" id="cd">0</span><span class="label">Days</span></div>
+    <div class="counter-unit"><span class="num" id="ch">0</span><span class="label">Hours</span></div>
+    <div class="counter-unit"><span class="num" id="cm">0</span><span class="label">Minutes</span></div>
+    <div class="counter-unit"><span class="num" id="cs">0</span><span class="label">Seconds</span></div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">Reasons</p>
+  <h2 class="name" style="font-size:28px;">Why I Love You</h2>
+  <div class="reasons">
+    <span class="reason-tag">Your Smile</span>
+    <span class="reason-tag">Your Eyes</span>
+    <span class="reason-tag">Your Cute Face</span>
+    <span class="reason-tag">Your Kind Heart</span>
+    <span class="reason-tag">Your Voice</span>
+    <span class="reason-tag">Your Care</span>
+    <span class="reason-tag">Everything About You</span>
+  </div>
+</section>
+
+<footer>
+  <p class="eyebrow">Always</p>
+  <p class="quote">"Even if I had another life, I'd still fall in love with you."</p>
+  <p class="final-line">I love you forever, Tanisha ❤️</p>
+</footer>
+
+<audio id="music" loop>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  // ---- Envelope open interaction ----
+  const envelope = document.getElementById('envelope');
+  const message = document.getElementById('message');
+  const music = document.getElementById('music');
+  let opened = false;
+
+  function openEnvelope(){
+    if(opened) return;
+    opened = true;
+    envelope.classList.add('open');
+    setTimeout(() => {
+      message.classList.add('visible');
+      message.scrollIntoView({behavior:'smooth', block:'center'});
+    }, 500);
+    music.play().catch(()=>{});
+  }
+
+  envelope.addEventListener('click', openEnvelope);
+  envelope.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      openEnvelope();
+    }
+  });
+
+  // ---- Together-since counter ----
+  const startDate = new Date("May 10, 2026 00:00:00");
+  function timer(){
+    const now = new Date();
+    let diff = now - startDate;
+    if(diff < 0) diff = 0;
+    const days = Math.floor(diff/86400000);
+    const hours = Math.floor((diff%86400000)/3600000);
+    const minutes = Math.floor((diff%3600000)/60000);
+    const seconds = Math.floor((diff%60000)/1000);
+    document.getElementById('cd').textContent = days;
+    document.getElementById('ch').textContent = hours;
+    document.getElementById('cm').textContent = minutes;
+    document.getElementById('cs').textContent = seconds;
+  }
+  timer();
+  setInterval(timer, 1000);
+
+  // ---- Gentle floating hearts (reduced frequency + respects motion pref) ----
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!prefersReducedMotion){
+    function spawnHeart(){
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.innerHTML = '❤';
+      heart.style.left = Math.random()*100 + 'vw';
+      heart.style.setProperty('--drift', (Math.random()*80-40)+'px');
+      heart.style.fontSize = (14+Math.random()*18)+'px';
+      document.body.appendChild(heart);
+      setTimeout(()=> heart.remove(), 9000);
+    }
+    setInterval(spawnHeart, 900);
+  }
+
+  // ---- Subtle starfield background ----
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resizeCanvas(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    stars = Array.from({length: 80}, () => ({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      r: Math.random()*1.4+0.2,
+      a: Math.random()
+    }));
+  }
+
+  function drawStars(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    stars.forEach(s => {
+      s.a += (Math.random()-0.5)*0.02;
+      s.a = Math.max(0.1, Math.min(1, s.a));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(246,236,233,${s.a})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(drawStars);
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+  drawStars();
+</script>
+
+</body>
+</html>
